@@ -21,9 +21,11 @@ type Token struct {
 //a struct to rep user account
 type Account struct {
 	gorm.Model
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Token    string `json:"token";sql:"-"`
+	Username  string `json:"username"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	Authlevel string `json:"authlevel"`
+	Token     string `json:"token";sql:"-"`
 }
 
 //validate incoming user details...
@@ -36,7 +38,11 @@ func (account *Account) Validate() (map[string]interface{}, bool) {
 		return u.Message(false, "Password is required"), false
 	}
 
-	//Email must be unique
+	if len(account.Username) < 2 {
+		return u.Message(false, "Username is required"), false
+	}
+
+	//Email and username must be unique
 	temp := &Account{}
 
 	//check for errors and duplicate emails
@@ -46,6 +52,15 @@ func (account *Account) Validate() (map[string]interface{}, bool) {
 	}
 	if temp.Email != "" {
 		return u.Message(false, "Email address already in use by another user."), false
+	}
+
+	//check for errors and duplicate usernames
+	err = GetDB().Table("accounts").Where("username = ?", account.Username).First(temp).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return u.Message(false, "Connection error. Please retry"), false
+	}
+	if temp.Username != "" {
+		return u.Message(false, "Username already in use by another user."), false
 	}
 
 	return u.Message(false, "Requirement passed"), true
@@ -62,7 +77,7 @@ func (account *Account) Create() map[string]interface{} {
 	GetDB().Create(account)
 
 	if account.ID <= 0 {
-		return u.Message(false, "Failed to create account, connectoin error.")
+		return u.Message(false, "Failed to create account, connection error.")
 	}
 
 	//Create new JWT token for the newly registered account
@@ -78,12 +93,12 @@ func (account *Account) Create() map[string]interface{} {
 	return response
 }
 
-func Login(email, password string) map[string]interface{} {
+func Login(username, password string) map[string]interface{} {
 	account := &Account{}
-	err := GetDB().Table("accounts").Where("email = ?", email).First(account).Error
+	err := GetDB().Table("accounts").Where("username = ?", username).First(account).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return u.Message(false, "Email address not found")
+			return u.Message(false, "Username not found")
 		}
 		return u.Message(false, "Connection error. Please retry")
 	}

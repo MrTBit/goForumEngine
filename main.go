@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/MrTBit/restapi/app"
-	"github.com/MrTBit/restapi/controllers"
+	"github.com/MrTBit/goForumEngine/app"
+	"github.com/MrTBit/goForumEngine/controllers"
 	"github.com/gorilla/mux"
 	"net/http"
 	"os"
@@ -14,6 +14,12 @@ func main() {
 
 	router.HandleFunc("/api/user/new", controllers.CreateAccount).Methods("POST")
 	router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
+	router.HandleFunc("/api/boards/new", controllers.CreateBoard).Methods("POST")
+	router.HandleFunc("/api/boards/{boardID}/new", controllers.CreateThread).Methods("POST")
+	router.HandleFunc("/api/boards", controllers.GetBoards).Methods("GET")
+	router.HandleFunc("/api/boards/{boardID}/threads", controllers.GetThreadsFor).Methods("GET")
+	router.HandleFunc("/api/boards/{boardID}/threads/{threadID}", controllers.GetThread).Methods("GET")
+
 	//router.HandleFunc("/api/contacts/new", controllers.CreateContact).Methods("POST")
 	//router.HandleFunc("/api/user/{id}/contacts", controllers.GetContactsFor).Methods("GET") // user/2/contacts
 
