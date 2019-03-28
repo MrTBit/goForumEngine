@@ -37,7 +37,7 @@ func (comment *Comment) Create() map[string]interface{} {
 	}
 
 	temp := &Comment{}
-	err := GetDB().Table("comments").Order("commentID desc").First(temp).Error
+	err := GetDB().Table("comments").Order("comment_id desc").First(temp).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return u.Message(false, "Connection Error. Please retry")
 	}
@@ -61,7 +61,7 @@ func (comment *Comment) Create() map[string]interface{} {
 
 func GetComments(threadid uint) []*Comment {
 	comments := make([]*Comment, 0)
-	err := GetDB().Table("comments").Where("threadID = ?", threadid).Find(&comments).Error
+	err := GetDB().Table("comments").Where("thread_id = ?", threadid).Find(&comments).Error
 	if err != nil {
 		fmt.Println(err)
 		return nil
@@ -72,7 +72,7 @@ func GetComments(threadid uint) []*Comment {
 
 func GetComment(commentid uint) *Comment {
 	comment := &Comment{}
-	err := GetDB().Table("comments").Where("commentID = ?", commentid).First(comment).Error
+	err := GetDB().Table("comments").Where("comment_id = ?", commentid).First(comment).Error
 	if err != nil {
 		fmt.Println(err)
 		return nil

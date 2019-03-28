@@ -37,7 +37,7 @@ func (thread *Thread) Create() map[string]interface{} {
 	}
 
 	temp := &Thread{}
-	err := GetDB().Table("threads").Order("threadID desc").First(temp).Error
+	err := GetDB().Table("threads").Order("thread_id desc").First(temp).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return u.Message(false, "Connection Error. Please retry")
 	}
@@ -61,7 +61,7 @@ func (thread *Thread) Create() map[string]interface{} {
 
 func GetThreads(boardid uint) []*Thread {
 	threads := make([]*Thread, 0)
-	err := GetDB().Table("threads").Where("boardID = ?", boardid).Find(&threads).Error
+	err := GetDB().Table("threads").Where("board_id = ?", boardid).Find(&threads).Error
 	if err != nil {
 		fmt.Println(err)
 		return nil
@@ -72,7 +72,7 @@ func GetThreads(boardid uint) []*Thread {
 
 func GetThread(threadid uint) *Thread {
 	thread := &Thread{}
-	err := GetDB().Table("threads").Where("threadID = ?", threadid).First(thread).Error
+	err := GetDB().Table("threads").Where("thread_id = ?", threadid).First(thread).Error
 	if err != nil {
 		fmt.Println(err)
 		return nil

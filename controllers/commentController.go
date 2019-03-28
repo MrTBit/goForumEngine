@@ -9,53 +9,53 @@ import (
 	"strconv"
 )
 
-var CreateThread = func(w http.ResponseWriter, r *http.Request) {
+var CreateComment = func(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["boardID"])
+	id, err := strconv.Atoi(params["threadID"])
 	if err != nil {
 		//passed param is not an integer
 		u.Respond(w, u.Message(false, "There was an error in your request"))
 		return
 	}
 
-	thread := &models.Thread{}
-	thread.BoardID = uint(id)
+	comment := &models.Comment{}
+	comment.ThreadID = uint(id)
 
-	err = json.NewDecoder(r.Body).Decode(thread)
+	err = json.NewDecoder(r.Body).Decode(comment)
 	if err != nil {
 		u.Respond(w, u.Message(false, "Error while decoding request body"))
 		return
 	}
 
-	resp := thread.Create()
+	resp := comment.Create()
 	u.Respond(w, resp)
 }
 
-var GetThreadsFor = func(w http.ResponseWriter, r *http.Request) {
+var GetCommentsFor = func(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["boardID"])
+	id, err := strconv.Atoi(params["threadID"])
 	if err != nil {
 		//passed param is not an integer
 		u.Respond(w, u.Message(false, "There was an error in your request"))
 		return
 	}
 
-	data := models.GetThreads(uint(id))
+	data := models.GetComments(uint(id))
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)
 }
 
-var GetThread = func(w http.ResponseWriter, r *http.Request) {
+var GetComment = func(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["threadID"])
+	id, err := strconv.Atoi(params["postID"])
 	if err != nil {
 		//passed param not int
 		u.Respond(w, u.Message(false, "There was an error in your request"))
 		return
 	}
 
-	data := models.GetThread(uint(id))
+	data := models.GetComment(uint(id))
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)

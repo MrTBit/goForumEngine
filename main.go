@@ -16,9 +16,12 @@ func main() {
 	router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
 	router.HandleFunc("/api/boards/new", controllers.CreateBoard).Methods("POST")
 	router.HandleFunc("/api/boards/{boardID}/new", controllers.CreateThread).Methods("POST")
+	router.HandleFunc("/api/boards/{boardID}/threads/{threadID}/new", controllers.CreateComment).Methods("POST")
 	router.HandleFunc("/api/boards", controllers.GetBoards).Methods("GET")
 	router.HandleFunc("/api/boards/{boardID}/threads", controllers.GetThreadsFor).Methods("GET")
 	router.HandleFunc("/api/boards/{boardID}/threads/{threadID}", controllers.GetThread).Methods("GET")
+	router.HandleFunc("/api/boards/{boardID}/threads/{threadID}/posts", controllers.GetCommentsFor).Methods("GET")
+	router.HandleFunc("/api/boards/{boardID}/threads/{threadID}/posts/{postID}", controllers.GetComment).Methods("GET")
 
 	//router.HandleFunc("/api/contacts/new", controllers.CreateContact).Methods("POST")
 	//router.HandleFunc("/api/user/{id}/contacts", controllers.GetContactsFor).Methods("GET") // user/2/contacts

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	u "github.com/MrTBit/goForumEngine/utils"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
@@ -95,6 +96,7 @@ func (account *Account) Create() map[string]interface{} {
 
 func Login(username, password string) map[string]interface{} {
 	account := &Account{}
+	fmt.Println(username)
 	err := GetDB().Table("accounts").Where("username = ?", username).First(account).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {

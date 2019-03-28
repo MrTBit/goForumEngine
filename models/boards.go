@@ -40,7 +40,7 @@ func (board *Board) Create() map[string]interface{} {
 	}
 
 	temp := &Board{}
-	err := GetDB().Table("boards").Order("boardID desc").First(temp).Error
+	err := GetDB().Table("boards").Order("board_id desc").First(temp).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return u.Message(false, "Connection Error. Please retry")
 	}
